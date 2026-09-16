@@ -8,6 +8,7 @@
         run: |
           rm -rf .buildozer
           rm -rf bin
+
 name: Build APK
 
 on:
@@ -23,19 +24,23 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Pull Buildozer image
-        run: docker pull kivy/buildozer:1.5.0
+      - name: Install Buildozer
+        run: |
+          python3 -m pip install --user --upgrade pip
+          python3 -m pip install --user buildozer
+
+      - name: Clean previous build
+        run: |
+          rm -rf .buildozer
+          rm -rf bin
 
       - name: Build APK
         run: |
-          docker run --rm \
-            --volume "${{ github.workspace }}":/home/user/hostcwd \
-            kivy/buildozer:1.5.0 \
-            android debug
+          buildozer -v android debug
 
       - name: Fix ownership
         run: |
-          sudo chown -R "$(id -u)":"$(id -g)" "${{ github.workspace }}"
+          sudo chown -R "$(id -u)":"$(id -g)" .
 
       - name: Upload APK
         uses: actions/upload-artifact@v4

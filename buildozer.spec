@@ -15,11 +15,15 @@ fullscreen = 0
 
 android.permissions = INTERNET,ACCESS_NETWORK_STATE,ACCESS_WIFI_STATE
 
-android.api = 33
+android.api = 36
 android.minapi = 24
+android.ndk = 28c
 
 android.archs = arm64-v8a,armeabi-v7a
 
 [buildozer]
 log_level = 2
 warn_on_root = 1
+
+[android]
+p4a.branch = develop
