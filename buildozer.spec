@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,txt
 version = 2.0
 
-requirements = python3,kivy
+requirements = python3,kivy,charset-normalizer
 
 orientation = portrait
 fullscreen = 0
@@ -19,7 +19,7 @@ android.api = 36
 android.minapi = 24
 android.ndk = 28c
 
-android.archs = arm64-v8a,armeabi-v7a
+android.archs = arm64-v8a
 
 p4a.branch = develop
 
