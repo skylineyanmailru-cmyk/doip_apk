@@ -19,20 +19,23 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install --upgrade https://github.com/kivy/buildozer/archive/master.zip
 
-      - name: Accept Android SDK licenses
-        run: |
-          mkdir -p "$HOME/.buildozer/android/platform/android-sdk/licenses"
-          yes | sdkmanager --licenses || true
-
-      - name: Install Android SDK Build Tools
-        run: |
-          sdkmanager "platform-tools" "platforms;android-36" "build-tools;37.0.0"
-
       - name: Check Build Environment
         run: |
+          echo "===== Buildozer ====="
           buildozer --version
+
+          echo "===== Python ====="
           python3 --version
+
+          echo "===== Packages ====="
+          python3 -m pip show buildozer || true
           python3 -m pip show python-for-android || true
+
+          echo "===== buildozer.spec ====="
+          grep -nE '^\[app:android\]|^p4a.branch|^android.api|^android.minapi|^android.ndk|^android.archs' buildozer.spec || true
+
+          echo "===== requirements ====="
+          grep -n '^requirements' buildozer.spec || true
 
       - name: Clean previous build
         run: |
@@ -41,7 +44,7 @@ jobs:
 
       - name: Build APK
         run: |
-          buildozer -v android debug
+          yes | buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
