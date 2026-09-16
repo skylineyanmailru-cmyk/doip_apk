@@ -27,10 +27,19 @@ jobs:
             cmake libffi-dev libssl-dev build-essential \
             ccache
 
-      - name: Install buildozer
+      - name: Install buildozer and pin python-for-android
         run: |
           pip install --upgrade pip
           pip install --upgrade buildozer cython==0.29.33
+          # Pin python-for-android to a known-good release.
+          # Newer releases (2026.05+) have a regression where several
+          # built-in recipes (android, kivy, pyjnius) were migrated to a
+          # "PyProjectRecipe" mechanism that incorrectly tries to fetch
+          # them from PyPI (where Android wheels don't exist), causing
+          # errors like "Could not find a version that satisfies kivy==...".
+          # Installing p4a via pip here makes Buildozer use this exact
+          # version instead of git-cloning the latest (broken) release.
+          pip install --upgrade "python-for-android==2024.1.21"
 
       - name: Build APK with Buildozer
         run: |
