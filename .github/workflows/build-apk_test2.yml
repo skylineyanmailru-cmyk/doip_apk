@@ -1,0 +1,3 @@
+- name: Check p4a branch
+  run: |
+    grep -nE '^\[app:android\]|^p4a.branch|^android.api|^android.minapi|^android.ndk' buildozer.spec

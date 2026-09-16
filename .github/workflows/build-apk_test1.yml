@@ -1,0 +1,6 @@
+- name: Check Buildozer and python-for-android
+  run: |
+    buildozer --version
+    python3 -m pip show buildozer
+    python3 -m pip show python-for-android || true
+    python3 -m pip list | grep -E 'buildozer|python-for-android|kivy|cython'
