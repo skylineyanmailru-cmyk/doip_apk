@@ -1,3 +1,13 @@
+ - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Pull Buildozer image
+        run: docker pull kivy/buildozer:1.5.0
+
+      - name: Clean Buildozer cache
+        run: |
+          rm -rf .buildozer
+          rm -rf bin
 name: Build APK
 
 on:
@@ -7,26 +17,27 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Pull official kivy/buildozer image
-        run: docker pull kivy/buildozer:latest
+      - name: Pull Buildozer image
+        run: docker pull kivy/buildozer:1.5.0
 
-      - name: Build APK with the official Buildozer Docker image
+      - name: Build APK
         run: |
           docker run --rm \
             --volume "${{ github.workspace }}":/home/user/hostcwd \
-            kivy/buildozer android debug
+            kivy/buildozer:1.5.0 \
+            android debug
 
-      - name: Fix ownership of build output
-        # The container may write files as a different UID than the
-        # runner user, which would otherwise block the upload step.
-        run: sudo chown -R "$(id -u)":"$(id -g)" "${{ github.workspace }}"
+      - name: Fix ownership
+        run: |
+          sudo chown -R "$(id -u)":"$(id -g)" "${{ github.workspace }}"
 
-      - name: Upload APK artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: leapmotor-doip-apk
