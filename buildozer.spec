@@ -7,7 +7,7 @@ source.dir = .
 source.include_exts = py,txt
 version = 2.0
 
-requirements = python3,kivy,charset-normalizer
+requirements = python3,kivy
 
 orientation = portrait
 fullscreen = 0
