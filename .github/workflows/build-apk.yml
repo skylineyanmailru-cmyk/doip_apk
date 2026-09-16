@@ -27,19 +27,26 @@ jobs:
             cmake libffi-dev libssl-dev build-essential \
             ccache
 
-      - name: Install buildozer and pin python-for-android
+      - name: Install buildozer and Cython
         run: |
-          pip install --upgrade pip
+          # Pin pip to a version that predates PyPI's newer "Android
+          # wheel" platform tags (e.g. cp314-...-android_24_arm64_v8a).
+          # A newer pip can auto-detect the Android target and fetch a
+          # prebuilt wheel that mismatches the actual build config,
+          # failing with "... is not a supported wheel on this platform".
+          # Pinning pip keeps dependency installs on the old, reliable
+          # "build from source" path that python-for-android expects.
+          python -m pip install --upgrade "pip==24.0"
           pip install --upgrade buildozer cython==0.29.33
-          # Pin python-for-android to a known-good release.
-          # Newer releases (2026.05+) have a regression where several
-          # built-in recipes (android, kivy, pyjnius) were migrated to a
-          # "PyProjectRecipe" mechanism that incorrectly tries to fetch
-          # them from PyPI (where Android wheels don't exist), causing
-          # errors like "Could not find a version that satisfies kivy==...".
-          # Installing p4a via pip here makes Buildozer use this exact
-          # version instead of git-cloning the latest (broken) release.
-          pip install --upgrade "python-for-android==2024.1.21"
+
+      - name: Clone a pinned, known-good python-for-android
+        run: |
+          git clone --branch v2024.01.21 --depth 1 \
+            https://github.com/kivy/python-for-android.git p4a-pinned
+          # Sanity check: fail fast if the checkout didn't land on the
+          # expected tag, instead of silently building with something else.
+          cd p4a-pinned
+          git describe --tags
 
       - name: Build APK with Buildozer
         run: |
