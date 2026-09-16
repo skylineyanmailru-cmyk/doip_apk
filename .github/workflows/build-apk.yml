@@ -1,13 +1,7 @@
- - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Pull Buildozer image
-        run: docker pull kivy/buildozer:1.5.0
-
-      - name: Clean Buildozer cache
-        run: |
-          rm -rf .buildozer
-          rm -rf bin
+- name: Clean Buildozer
+  run: |
+    rm -rf .buildozer
+    rm -rf bin
 
 name: Build APK
 
